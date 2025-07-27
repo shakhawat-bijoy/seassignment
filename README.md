@@ -74,504 +74,6 @@ interface MediaPlayer {
 
 ---
 
-### 3.8 Visitor Pattern
-
-**Theory:**
-The Visitor pattern lets you define new operations without changing the classes of the elements on which it operates. It separates algorithms from the objects on which they operate by moving the operational logic into separate visitor classes.
-
-**UML Diagram:**
-```
-    Client ──────► Visitor ◄───── ConcreteVisitor
-                      ↑               │
-                      │            visit()
-    Element ──────► AcceptVisitor     │
-       ↑                 │            │
-       │              accept() ◄──────┘
-   ConcreteElement
-```
-
-**Structure:**
-- **Visitor**: Interface declaring visit operations for each ConcreteElement
-- **ConcreteVisitor**: Implements operations defined by Visitor
-- **Element**: Interface defining accept method
-- **ConcreteElement**: Implements accept method and defines entry point
-
-**Partial Code Example:**
-```java
-// Visitor interface
-interface ShapeVisitor {
-    void visit(Circle circle);
-    void visit(Rectangle rectangle);
-    void visit(Triangle triangle);
-}
-
-// Element interface
-interface Shape {
-    void accept(ShapeVisitor visitor);
-}
-
-// Concrete Elements
-class Circle implements Shape {
-    private double radius;
-    
-    public Circle(double radius) {
-        this.radius = radius;
-    }
-    
-    public double getRadius() { return radius; }
-    
-    @Override
-    public void accept(ShapeVisitor visitor) {
-        visitor.visit(this);
-    }
-}
-
-class Rectangle implements Shape {
-    private double width, height;
-    
-    public Rectangle(double width, double height) {
-        this.width = width;
-        this.height = height;
-    }
-    
-    public double getWidth() { return width; }
-    public double getHeight() { return height; }
-    
-    @Override
-    public void accept(ShapeVisitor visitor) {
-        visitor.visit(this);
-    }
-}
-
-// Concrete Visitors
-class AreaCalculator implements ShapeVisitor {
-    private double totalArea = 0;
-    
-    @Override
-    public void visit(Circle circle) {
-        double area = Math.PI * circle.getRadius() * circle.getRadius();
-        System.out.println("Circle area: " + area);
-        totalArea += area;
-    }
-    
-    @Override
-    public void visit(Rectangle rectangle) {
-        double area = rectangle.getWidth() * rectangle.getHeight();
-        System.out.println("Rectangle area: " + area);
-        totalArea += area;
-    }
-    
-    @Override
-    public void visit(Triangle triangle) {
-        // Implementation for triangle area calculation
-    }
-    
-    public double getTotalArea() { return totalArea; }
-}
-
-class PerimeterCalculator implements ShapeVisitor {
-    @Override
-    public void visit(Circle circle) {
-        double perimeter = 2 * Math.PI * circle.getRadius();
-        System.out.println("Circle perimeter: " + perimeter);
-    }
-    
-    @Override
-    public void visit(Rectangle rectangle) {
-        double perimeter = 2 * (rectangle.getWidth() + rectangle.getHeight());
-        System.out.println("Rectangle perimeter: " + perimeter);
-    }
-    
-    @Override
-    public void visit(Triangle triangle) {
-        // Implementation for triangle perimeter calculation
-    }
-}
-```
-
----
-
-### 3.9 Iterator Pattern
-
-**Theory:**
-The Iterator pattern provides a way to access elements of a collection sequentially without exposing its underlying representation. It decouples algorithms from containers and provides a uniform interface for traversing different collection types.
-
-**UML Diagram:**
-```
-    Client ──────► Iterator ◄───── ConcreteIterator
-                      ↑                  │
-                   hasNext()             │
-                   next()                │
-                                         │
-    Aggregate ──────► ConcreteAggregate ─┘
-       ↑                    │
-   createIterator()    createIterator()
-```
-
-**Structure:**
-- **Iterator**: Interface for accessing and traversing elements
-- **ConcreteIterator**: Implements Iterator interface and tracks current position
-- **Aggregate**: Interface for creating Iterator objects
-- **ConcreteAggregate**: Implements Aggregate interface
-
-**Partial Code Example:**
-```java
-// Iterator interface
-interface Iterator<T> {
-    boolean hasNext();
-    T next();
-}
-
-// Aggregate interface
-interface Container<T> {
-    Iterator<T> getIterator();
-}
-
-// Concrete Iterator
-class BookIterator implements Iterator<Book> {
-    private Book[] books;
-    private int position = 0;
-    
-    public BookIterator(Book[] books) {
-        this.books = books;
-    }
-    
-    @Override
-    public boolean hasNext() {
-        return position < books.length && books[position] != null;
-    }
-    
-    @Override
-    public Book next() {
-        if(hasNext()) {
-            return books[position++];
-        }
-        return null;
-    }
-}
-
-// Concrete Aggregate
-class BookCollection implements Container<Book> {
-    private Book[] books;
-    private int count = 0;
-    
-    public BookCollection(int maxSize) {
-        books = new Book[maxSize];
-    }
-    
-    public void addBook(Book book) {
-        if(count < books.length) {
-            books[count++] = book;
-        }
-    }
-    
-    @Override
-    public Iterator<Book> getIterator() {
-        return new BookIterator(books);
-    }
-}
-
-class Book {
-    private String title;
-    private String author;
-    
-    public Book(String title, String author) {
-        this.title = title;
-        this.author = author;
-    }
-    
-    // getters...
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-}
-```
-
----
-
-### 3.10 Interpreter Pattern
-
-**Theory:**
-The Interpreter pattern defines a representation for a language's grammar and provides an interpreter to deal with this grammar. It's used to evaluate sentences in a language by representing grammar rules as classes and building an abstract syntax tree.
-
-**UML Diagram:**
-```
-    Client ──────► Context
-       │              │
-       │              ▼
-       └──────► AbstractExpression
-                       ↑
-                  ┌────┴────┐
-                  │         │
-            TerminalExpression  NonterminalExpression
-                                       │
-                                  expressions[]
-```
-
-**Structure:**
-- **AbstractExpression**: Interface for executing operations
-- **TerminalExpression**: Implements operations for terminal symbols
-- **NonterminalExpression**: Implements operations for nonterminal symbols
-- **Context**: Contains information global to interpreter
-
-**Partial Code Example:**
-```java
-// Abstract Expression
-interface Expression {
-    boolean interpret(Context context);
-}
-
-// Context
-class Context {
-    private Map<String, Boolean> variables = new HashMap<>();
-    
-    public void setVariable(String name, boolean value) {
-        variables.put(name, value);
-    }
-    
-    public boolean getVariable(String name) {
-        return variables.getOrDefault(name, false);
-    }
-}
-
-// Terminal Expression
-class VariableExpression implements Expression {
-    private String variableName;
-    
-    public VariableExpression(String variableName) {
-        this.variableName = variableName;
-    }
-    
-    @Override
-    public boolean interpret(Context context) {
-        return context.getVariable(variableName);
-    }
-}
-
-// Nonterminal Expressions
-class AndExpression implements Expression {
-    private Expression leftExpression;
-    private Expression rightExpression;
-    
-    public AndExpression(Expression left, Expression right) {
-        this.leftExpression = left;
-        this.rightExpression = right;
-    }
-    
-    @Override
-    public boolean interpret(Context context) {
-        return leftExpression.interpret(context) && rightExpression.interpret(context);
-    }
-}
-
-class OrExpression implements Expression {
-    private Expression leftExpression;
-    private Expression rightExpression;
-    
-    public OrExpression(Expression left, Expression right) {
-        this.leftExpression = left;
-        this.rightExpression = right;
-    }
-    
-    @Override
-    public boolean interpret(Context context) {
-        return leftExpression.interpret(context) || rightExpression.interpret(context);
-    }
-}
-
-class NotExpression implements Expression {
-    private Expression expression;
-    
-    public NotExpression(Expression expression) {
-        this.expression = expression;
-    }
-    
-    @Override
-    public boolean interpret(Context context) {
-        return !expression.interpret(context);
-    }
-}
-```
-
----
-
-### 3.11 Memento Pattern
-
-**Theory:**
-The Memento pattern provides the ability to restore an object to its previous state without revealing the details of its implementation. It captures and externalizes an object's internal state so that the object can be restored to this state later.
-
-**UML Diagram:**
-```
-    Originator ──────► Memento
-       │                 ↑
-       │                 │
-    createMemento()      │
-    restoreMemento()     │
-       │                 │
-       └─────────────────┘
-            │
-            ▼
-        Caretaker
-```
-
-**Structure:**
-- **Originator**: Creates memento and uses it to restore its state
-- **Memento**: Stores internal state of Originator
-- **Caretaker**: Responsible for memento's safekeeping, never operates on memento
-
-**Partial Code Example:**
-```java
-// Memento class
-class TextMemento {
-    private final String content;
-    private final int cursorPosition;
-    private final long timestamp;
-    
-    public TextMemento(String content, int cursorPosition) {
-        this.content = content;
-        this.cursorPosition = cursorPosition;
-        this.timestamp = System.currentTimeMillis();
-    }
-    
-    public String getContent() { return content; }
-    public int getCursorPosition() { return cursorPosition; }
-    public long getTimestamp() { return timestamp; }
-}
-
-// Originator
-class TextEditor {
-    private StringBuilder content;
-    private int cursorPosition;
-    
-    public TextEditor() {
-        this.content = new StringBuilder();
-        this.cursorPosition = 0;
-    }
-    
-    public void write(String text) {
-        content.append(text);
-        cursorPosition += text.length();
-    }
-    
-    public void setCursor(int position) {
-        if(position >= 0 && position <= content.length()) {
-            this.cursorPosition = position;
-        }
-    }
-    
-    // Create Memento
-    public TextMemento save() {
-        return new TextMemento(content.toString(), cursorPosition);
-    }
-    
-    // Restore from Memento
-    public void restore(TextMemento memento) {
-        this.content = new StringBuilder(memento.getContent());
-        this.cursorPosition = memento.getCursorPosition();
-    }
-    
-    public String getContent() { return content.toString(); }
-    public int getCursorPosition() { return cursorPosition; }
-}
-
-// Caretaker
-class EditorHistory {
-    private Stack<TextMemento> history = new Stack<>();
-    private TextEditor editor;
-    
-    public EditorHistory(TextEditor editor) {
-        this.editor = editor;
-    }
-    
-    public void backup() {
-        history.push(editor.save());
-    }
-    
-    public void undo() {
-        if(!history.isEmpty()) {
-            TextMemento memento = history.pop();
-            editor.restore(memento);
-        }
-    }
-    
-    public boolean canUndo() {
-        return !history.isEmpty();
-    }
-    
-    public void showHistory() {
-        System.out.println("History has " + history.size() + " states");
-        for(int i = 0; i < history.size(); i++) {
-            TextMemento memento = history.get(i);
-            System.out.println("State " + i + ": " + memento.getContent().substring(0, 
-                Math.min(20, memento.getContent().length())) + "...");
-        }
-    }
-}
-```
-
----
-
-## 4. Conclusion
-
-Design patterns are fundamental tools in software engineering that provide proven solutions to recurring design problems. This comprehensive study of Structural and Behavioral patterns demonstrates their importance in creating maintainable, flexible, and robust software systems.
-
-**Key Benefits of Design Patterns:**
-
-**Structural Patterns** help organize code by defining relationships between entities. They promote code reusability through composition and delegation rather than inheritance, making systems more flexible and easier to maintain. The Adapter pattern enables integration of incompatible systems, Composite simplifies hierarchical structures, Proxy provides controlled access, Flyweight optimizes memory usage, Facade simplifies complex interfaces, Bridge separates abstraction from implementation, and Decorator adds functionality dynamically.
-
-**Behavioral Patterns** focus on communication between objects and the assignment of responsibilities. They help distribute behavior across objects in ways that increase flexibility in carrying out communication. Template Method provides algorithmic frameworks, Mediator reduces coupling between communicating objects, Chain of Responsibility decouples senders and receivers, Observer enables loose coupling in event systems, Strategy makes algorithms interchangeable, Command encapsulates requests as objects, State enables state-dependent behavior, Visitor separates algorithms from data structures, Iterator provides uniform traversal, Interpreter enables language processing, and Memento enables state restoration.
-
-**Best Practices for Implementation:**
-
-1. **Choose Appropriate Patterns**: Not every problem requires a design pattern. Use patterns when they solve actual problems, not just because they exist.
-
-2. **Understand Trade-offs**: Each pattern has benefits and costs. Consider complexity, performance, and maintainability implications.
-
-3. **Combine Patterns Wisely**: Patterns often work together. For example, Abstract Factory with Strategy, or Observer with Mediator.
-
-4. **Avoid Over-engineering**: Start simple and refactor toward patterns when the need becomes clear.
-
-5. **Document Pattern Usage**: Make it clear when and why patterns are used in your codebase.
-
-Design patterns represent decades of collective experience in software development. They provide a shared vocabulary that enables developers to communicate complex design concepts efficiently. By understanding and applying these patterns appropriately, developers can create more robust, maintainable, and scalable software systems.
-
-The patterns covered in this report form the foundation of many modern software architectures and frameworks. Mastering these patterns is essential for any software developer who wants to write high-quality, professional code that stands the test of time.
-
----
-
-**References:**
-- Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). Design Patterns: Elements of Reusable Object-Oriented Software. Addison-Wesley.
-- Freeman, E., & Robson, E. (2020). Head First Design Patterns. O'Reilly Media.
-- Shvets, A. (2019). Dive Into Design Patterns. Refactoring.Guru.
-
----
-
-*This report provides a comprehensive overview of 18 essential design patterns with theoretical foundations, structural diagrams, and practical code examples. Each pattern includes partial implementations that demonstrate core concepts while maintaining focus on understanding rather than complete implementation details.*
-
-// Adaptee - existing incompatible interface
-class AdvancedMediaPlayer {
-    void playVlc(String fileName) { /* implementation */ }
-    void playMp4(String fileName) { /* implementation */ }
-}
-
-// Adapter class
-class MediaAdapter implements MediaPlayer {
-    AdvancedMediaPlayer advancedPlayer;
-    
-    public MediaAdapter(String audioType) {
-        // Initialize based on audio type
-        advancedPlayer = new AdvancedMediaPlayer();
-    }
-    
-    @Override
-    public void play(String audioType, String fileName) {
-        if(audioType.equalsIgnoreCase("vlc")) {
-            advancedPlayer.playVlc(fileName);
-        }
-        // ... other adaptations
-    }
-}
-```
-
 ---
 
 ### 2.2 Composite Pattern
@@ -1681,6 +1183,506 @@ class HasQuarterState implements State {
         System.out.println("No gumball dispensed");
     }
 }
+
+
+### 3.8 Visitor Pattern
+
+**Theory:**
+The Visitor pattern lets you define new operations without changing the classes of the elements on which it operates. It separates algorithms from the objects on which they operate by moving the operational logic into separate visitor classes.
+
+**UML Diagram:**
+```
+    Client ──────► Visitor ◄───── ConcreteVisitor
+                      ↑               │
+                      │            visit()
+    Element ──────► AcceptVisitor     │
+       ↑                 │            │
+       │              accept() ◄──────┘
+   ConcreteElement
+```
+
+**Structure:**
+- **Visitor**: Interface declaring visit operations for each ConcreteElement
+- **ConcreteVisitor**: Implements operations defined by Visitor
+- **Element**: Interface defining accept method
+- **ConcreteElement**: Implements accept method and defines entry point
+
+**Partial Code Example:**
+```java
+// Visitor interface
+interface ShapeVisitor {
+    void visit(Circle circle);
+    void visit(Rectangle rectangle);
+    void visit(Triangle triangle);
+}
+
+// Element interface
+interface Shape {
+    void accept(ShapeVisitor visitor);
+}
+
+// Concrete Elements
+class Circle implements Shape {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    public double getRadius() { return radius; }
+    
+    @Override
+    public void accept(ShapeVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+class Rectangle implements Shape {
+    private double width, height;
+    
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+    
+    public double getWidth() { return width; }
+    public double getHeight() { return height; }
+    
+    @Override
+    public void accept(ShapeVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+// Concrete Visitors
+class AreaCalculator implements ShapeVisitor {
+    private double totalArea = 0;
+    
+    @Override
+    public void visit(Circle circle) {
+        double area = Math.PI * circle.getRadius() * circle.getRadius();
+        System.out.println("Circle area: " + area);
+        totalArea += area;
+    }
+    
+    @Override
+    public void visit(Rectangle rectangle) {
+        double area = rectangle.getWidth() * rectangle.getHeight();
+        System.out.println("Rectangle area: " + area);
+        totalArea += area;
+    }
+    
+    @Override
+    public void visit(Triangle triangle) {
+        // Implementation for triangle area calculation
+    }
+    
+    public double getTotalArea() { return totalArea; }
+}
+
+class PerimeterCalculator implements ShapeVisitor {
+    @Override
+    public void visit(Circle circle) {
+        double perimeter = 2 * Math.PI * circle.getRadius();
+        System.out.println("Circle perimeter: " + perimeter);
+    }
+    
+    @Override
+    public void visit(Rectangle rectangle) {
+        double perimeter = 2 * (rectangle.getWidth() + rectangle.getHeight());
+        System.out.println("Rectangle perimeter: " + perimeter);
+    }
+    
+    @Override
+    public void visit(Triangle triangle) {
+        // Implementation for triangle perimeter calculation
+    }
+}
+```
+
+---
+
+### 3.9 Iterator Pattern
+
+**Theory:**
+The Iterator pattern provides a way to access elements of a collection sequentially without exposing its underlying representation. It decouples algorithms from containers and provides a uniform interface for traversing different collection types.
+
+**UML Diagram:**
+```
+    Client ──────► Iterator ◄───── ConcreteIterator
+                      ↑                  │
+                   hasNext()             │
+                   next()                │
+                                         │
+    Aggregate ──────► ConcreteAggregate ─┘
+       ↑                    │
+   createIterator()    createIterator()
+```
+
+**Structure:**
+- **Iterator**: Interface for accessing and traversing elements
+- **ConcreteIterator**: Implements Iterator interface and tracks current position
+- **Aggregate**: Interface for creating Iterator objects
+- **ConcreteAggregate**: Implements Aggregate interface
+
+**Partial Code Example:**
+```java
+// Iterator interface
+interface Iterator<T> {
+    boolean hasNext();
+    T next();
+}
+
+// Aggregate interface
+interface Container<T> {
+    Iterator<T> getIterator();
+}
+
+// Concrete Iterator
+class BookIterator implements Iterator<Book> {
+    private Book[] books;
+    private int position = 0;
+    
+    public BookIterator(Book[] books) {
+        this.books = books;
+    }
+    
+    @Override
+    public boolean hasNext() {
+        return position < books.length && books[position] != null;
+    }
+    
+    @Override
+    public Book next() {
+        if(hasNext()) {
+            return books[position++];
+        }
+        return null;
+    }
+}
+
+// Concrete Aggregate
+class BookCollection implements Container<Book> {
+    private Book[] books;
+    private int count = 0;
+    
+    public BookCollection(int maxSize) {
+        books = new Book[maxSize];
+    }
+    
+    public void addBook(Book book) {
+        if(count < books.length) {
+            books[count++] = book;
+        }
+    }
+    
+    @Override
+    public Iterator<Book> getIterator() {
+        return new BookIterator(books);
+    }
+}
+
+class Book {
+    private String title;
+    private String author;
+    
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+    
+    // getters...
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+}
+```
+
+---
+
+### 3.10 Interpreter Pattern
+
+**Theory:**
+The Interpreter pattern defines a representation for a language's grammar and provides an interpreter to deal with this grammar. It's used to evaluate sentences in a language by representing grammar rules as classes and building an abstract syntax tree.
+
+**UML Diagram:**
+```
+    Client ──────► Context
+       │              │
+       │              ▼
+       └──────► AbstractExpression
+                       ↑
+                  ┌────┴────┐
+                  │         │
+            TerminalExpression  NonterminalExpression
+                                       │
+                                  expressions[]
+```
+
+**Structure:**
+- **AbstractExpression**: Interface for executing operations
+- **TerminalExpression**: Implements operations for terminal symbols
+- **NonterminalExpression**: Implements operations for nonterminal symbols
+- **Context**: Contains information global to interpreter
+
+**Partial Code Example:**
+```java
+// Abstract Expression
+interface Expression {
+    boolean interpret(Context context);
+}
+
+// Context
+class Context {
+    private Map<String, Boolean> variables = new HashMap<>();
+    
+    public void setVariable(String name, boolean value) {
+        variables.put(name, value);
+    }
+    
+    public boolean getVariable(String name) {
+        return variables.getOrDefault(name, false);
+    }
+}
+
+// Terminal Expression
+class VariableExpression implements Expression {
+    private String variableName;
+    
+    public VariableExpression(String variableName) {
+        this.variableName = variableName;
+    }
+    
+    @Override
+    public boolean interpret(Context context) {
+        return context.getVariable(variableName);
+    }
+}
+
+// Nonterminal Expressions
+class AndExpression implements Expression {
+    private Expression leftExpression;
+    private Expression rightExpression;
+    
+    public AndExpression(Expression left, Expression right) {
+        this.leftExpression = left;
+        this.rightExpression = right;
+    }
+    
+    @Override
+    public boolean interpret(Context context) {
+        return leftExpression.interpret(context) && rightExpression.interpret(context);
+    }
+}
+
+class OrExpression implements Expression {
+    private Expression leftExpression;
+    private Expression rightExpression;
+    
+    public OrExpression(Expression left, Expression right) {
+        this.leftExpression = left;
+        this.rightExpression = right;
+    }
+    
+    @Override
+    public boolean interpret(Context context) {
+        return leftExpression.interpret(context) || rightExpression.interpret(context);
+    }
+}
+
+class NotExpression implements Expression {
+    private Expression expression;
+    
+    public NotExpression(Expression expression) {
+        this.expression = expression;
+    }
+    
+    @Override
+    public boolean interpret(Context context) {
+        return !expression.interpret(context);
+    }
+}
+```
+
+---
+
+### 3.11 Memento Pattern
+
+**Theory:**
+The Memento pattern provides the ability to restore an object to its previous state without revealing the details of its implementation. It captures and externalizes an object's internal state so that the object can be restored to this state later.
+
+**UML Diagram:**
+```
+    Originator ──────► Memento
+       │                 ↑
+       │                 │
+    createMemento()      │
+    restoreMemento()     │
+       │                 │
+       └─────────────────┘
+            │
+            ▼
+        Caretaker
+```
+
+**Structure:**
+- **Originator**: Creates memento and uses it to restore its state
+- **Memento**: Stores internal state of Originator
+- **Caretaker**: Responsible for memento's safekeeping, never operates on memento
+
+**Partial Code Example:**
+```java
+// Memento class
+class TextMemento {
+    private final String content;
+    private final int cursorPosition;
+    private final long timestamp;
+    
+    public TextMemento(String content, int cursorPosition) {
+        this.content = content;
+        this.cursorPosition = cursorPosition;
+        this.timestamp = System.currentTimeMillis();
+    }
+    
+    public String getContent() { return content; }
+    public int getCursorPosition() { return cursorPosition; }
+    public long getTimestamp() { return timestamp; }
+}
+
+// Originator
+class TextEditor {
+    private StringBuilder content;
+    private int cursorPosition;
+    
+    public TextEditor() {
+        this.content = new StringBuilder();
+        this.cursorPosition = 0;
+    }
+    
+    public void write(String text) {
+        content.append(text);
+        cursorPosition += text.length();
+    }
+    
+    public void setCursor(int position) {
+        if(position >= 0 && position <= content.length()) {
+            this.cursorPosition = position;
+        }
+    }
+    
+    // Create Memento
+    public TextMemento save() {
+        return new TextMemento(content.toString(), cursorPosition);
+    }
+    
+    // Restore from Memento
+    public void restore(TextMemento memento) {
+        this.content = new StringBuilder(memento.getContent());
+        this.cursorPosition = memento.getCursorPosition();
+    }
+    
+    public String getContent() { return content.toString(); }
+    public int getCursorPosition() { return cursorPosition; }
+}
+
+// Caretaker
+class EditorHistory {
+    private Stack<TextMemento> history = new Stack<>();
+    private TextEditor editor;
+    
+    public EditorHistory(TextEditor editor) {
+        this.editor = editor;
+    }
+    
+    public void backup() {
+        history.push(editor.save());
+    }
+    
+    public void undo() {
+        if(!history.isEmpty()) {
+            TextMemento memento = history.pop();
+            editor.restore(memento);
+        }
+    }
+    
+    public boolean canUndo() {
+        return !history.isEmpty();
+    }
+    
+    public void showHistory() {
+        System.out.println("History has " + history.size() + " states");
+        for(int i = 0; i < history.size(); i++) {
+            TextMemento memento = history.get(i);
+            System.out.println("State " + i + ": " + memento.getContent().substring(0, 
+                Math.min(20, memento.getContent().length())) + "...");
+        }
+    }
+}
+```
+
+---
+
+## 4. Conclusion
+
+Design patterns are fundamental tools in software engineering that provide proven solutions to recurring design problems. This comprehensive study of Structural and Behavioral patterns demonstrates their importance in creating maintainable, flexible, and robust software systems.
+
+**Key Benefits of Design Patterns:**
+
+**Structural Patterns** help organize code by defining relationships between entities. They promote code reusability through composition and delegation rather than inheritance, making systems more flexible and easier to maintain. The Adapter pattern enables integration of incompatible systems, Composite simplifies hierarchical structures, Proxy provides controlled access, Flyweight optimizes memory usage, Facade simplifies complex interfaces, Bridge separates abstraction from implementation, and Decorator adds functionality dynamically.
+
+**Behavioral Patterns** focus on communication between objects and the assignment of responsibilities. They help distribute behavior across objects in ways that increase flexibility in carrying out communication. Template Method provides algorithmic frameworks, Mediator reduces coupling between communicating objects, Chain of Responsibility decouples senders and receivers, Observer enables loose coupling in event systems, Strategy makes algorithms interchangeable, Command encapsulates requests as objects, State enables state-dependent behavior, Visitor separates algorithms from data structures, Iterator provides uniform traversal, Interpreter enables language processing, and Memento enables state restoration.
+
+**Best Practices for Implementation:**
+
+1. **Choose Appropriate Patterns**: Not every problem requires a design pattern. Use patterns when they solve actual problems, not just because they exist.
+
+2. **Understand Trade-offs**: Each pattern has benefits and costs. Consider complexity, performance, and maintainability implications.
+
+3. **Combine Patterns Wisely**: Patterns often work together. For example, Abstract Factory with Strategy, or Observer with Mediator.
+
+4. **Avoid Over-engineering**: Start simple and refactor toward patterns when the need becomes clear.
+
+5. **Document Pattern Usage**: Make it clear when and why patterns are used in your codebase.
+
+Design patterns represent decades of collective experience in software development. They provide a shared vocabulary that enables developers to communicate complex design concepts efficiently. By understanding and applying these patterns appropriately, developers can create more robust, maintainable, and scalable software systems.
+
+The patterns covered in this report form the foundation of many modern software architectures and frameworks. Mastering these patterns is essential for any software developer who wants to write high-quality, professional code that stands the test of time.
+
+---
+
+**References:**
+- Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). Design Patterns: Elements of Reusable Object-Oriented Software. Addison-Wesley.
+- Freeman, E., & Robson, E. (2020). Head First Design Patterns. O'Reilly Media.
+- Shvets, A. (2019). Dive Into Design Patterns. Refactoring.Guru.
+
+---
+
+*This report provides a comprehensive overview of 18 essential design patterns with theoretical foundations, structural diagrams, and practical code examples. Each pattern includes partial implementations that demonstrate core concepts while maintaining focus on understanding rather than complete implementation details.*
+
+// Adaptee - existing incompatible interface
+class AdvancedMediaPlayer {
+    void playVlc(String fileName) { /* implementation */ }
+    void playMp4(String fileName) { /* implementation */ }
+}
+
+// Adapter class
+class MediaAdapter implements MediaPlayer {
+    AdvancedMediaPlayer advancedPlayer;
+    
+    public MediaAdapter(String audioType) {
+        // Initialize based on audio type
+        advancedPlayer = new AdvancedMediaPlayer();
+    }
+    
+    @Override
+    public void play(String audioType, String fileName) {
+        if(audioType.equalsIgnoreCase("vlc")) {
+            advancedPlayer.playVlc(fileName);
+        }
+        // ... other adaptations
+    }
+}
+```
+
 
 
 
