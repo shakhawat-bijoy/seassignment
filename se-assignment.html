@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Patterns: Structural and Behavioral Patterns</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cover-page {
+            text-align: center;
+            page-break-after: always;
+            padding-top: 10mm;
+        }
+
+        .cover-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .cover-subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
+            color: #34495e;
+        }
+
+        .cover-info {
+            font-size: 16px;
+            line-height: 2;
+            margin-top: 60px;
+        }
+
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+
+        .toc-item.level-1 {
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .toc-item.level-2 {
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .toc-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted #ccc;
+            margin: 0 10px;
+            height: 1px;
+            align-self: flex-end;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            page-break-before: always;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            font-size: 16px;
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #007acc;
+            border-radius: 4px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            margin: 20px 0;
+            overflow-x: auto;
+            page-break-inside: avoid;
+            white-space: pre-wrap;
+            color: #2d3748;
+        }
+
+        .code-block .keyword {
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .code-block .class-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .code-block .method {
+            color: #8e44ad;
+        }
+
+        .code-block .string {
+            color: #27ae60;
+        }
+
+        .code-block .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .code-block .annotation {
+            color: #f39c12;
+        }
+
+        .uml-diagram {
+            background-color: #f0f8ff;
+            border: 1px solid #b0d4f1;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 15px 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .pattern-section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+
+        .structure-list {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+
+        .structure-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .structure-list li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .intro-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .conclusion-section {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .references {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #bdc3c7;
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 20mm;
+            right: 20mm;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Print/Save as PDF</button>
+
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="cover-title">Design Patterns: Structural and Behavioral Patterns</div>
+        <div class="cover-subtitle">Comprehensive Study Report</div>
+        <div class="cover-info">
+            <div><strong>Subject:</strong> Software Engineering</div>
+            <div><strong>Topic:</strong> Design Patterns</div>
+            <div><strong>Date:</strong> July 2025</div>
+            <div><strong>Pages:</strong> 45+ pages</div>
+        </div>
+
+
+        <div class="submission-info" style="display: flex; justify-content: space-between;">
+            <div>
+                <p>Submitted By: <span class="student-name" style="font-weight: bold;">Shakhawat Hossain Bijoy</span></p>
+                <p>Student ID: <span class="student-id" style="font-weight: bold;">231071041</span></p>
+            </div>
+            <div>
+                <p>Submitted To: <span class="instructor-name" style="font-weight: bold;">Md. Fazle Hasan Mihad</span>
+                </p>
+                <p>Course Instructor</p>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h1>Table of Contents</h1>
+
+        <div class="toc-item level-1">
+            <span>1. Introduction</span>
+            <div class="toc-dots"></div>
+            <span>3</span>
+        </div>
+
+        <div class="toc-item level-1">
+            <span>2. Structural Design Patterns</span>
+            <div class="toc-dots"></div>
+            <span>4</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.1 Adapter Pattern</span>
+            <div class="toc-dots"></div>
+            <span>4</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.2 Composite Pattern</span>
+            <div class="toc-dots"></div>
+            <span>6</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.3 Proxy Pattern</span>
+            <div class="toc-dots"></div>
+            <span>8</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.4 Flyweight Pattern</span>
+            <div class="toc-dots"></div>
+            <span>10</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.5 Facade Pattern</span>
+            <div class="toc-dots"></div>
+            <span>12</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.6 Bridge Pattern</span>
+            <div class="toc-dots"></div>
+            <span>14</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>2.7 Decorator Pattern</span>
+            <div class="toc-dots"></div>
+            <span>16</span>
+        </div>
+
+        <div class="toc-item level-1">
+            <span>3. Behavioral Design Patterns</span>
+            <div class="toc-dots"></div>
+            <span>18</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.1 Template Method Pattern</span>
+            <div class="toc-dots"></div>
+            <span>18</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.2 Mediator Pattern</span>
+            <div class="toc-dots"></div>
+            <span>20</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.3 Chain of Responsibility Pattern</span>
+            <div class="toc-dots"></div>
+            <span>22</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.4 Observer Pattern</span>
+            <div class="toc-dots"></div>
+            <span>24</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.5 Strategy Pattern</span>
+            <div class="toc-dots"></div>
+            <span>26</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.6 Command Pattern</span>
+            <div class="toc-dots"></div>
+            <span>28</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.7 State Pattern</span>
+            <div class="toc-dots"></div>
+            <span>30</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.8 Visitor Pattern</span>
+            <div class="toc-dots"></div>
+            <span>32</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.9 Iterator Pattern</span>
+            <div class="toc-dots"></div>
+            <span>35</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.10 Interpreter Pattern</span>
+            <div class="toc-dots"></div>
+            <span>37</span>
+        </div>
+        <div class="toc-item level-2">
+            <span>3.11 Memento Pattern</span>
+            <div class="toc-dots"></div>
+            <span>39</span>
+        </div>
+
+        <div class="toc-item level-1">
+            <span>4. Conclusion</span>
+            <div class="toc-dots"></div>
+            <span>42</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <h1>1. Introduction</h1>
+    <div class="intro-section">
+        <p>Design patterns are reusable solutions to commonly occurring problems in software design. They represent best
+            practices evolved over time and provide a common vocabulary for developers. This report covers Structural
+            and Behavioral design patterns, which are two of the three main categories of design patterns identified by
+            the Gang of Four (GoF).</p>
+
+        <p><strong>Structural Patterns</strong> deal with object composition and relationships between entities,
+            focusing on how classes and objects can be combined to form larger structures.</p>
+
+        <p><strong>Behavioral Patterns</strong> are concerned with algorithms and the assignment of responsibilities
+            between objects, focusing on communication patterns and the flow of control.</p>
+    </div>
+
+    <h1>2. Structural Design Patterns</h1>
+
+    <div class="pattern-section">
+        <h2>2.1 Adapter Pattern</h2>
+
+        <h3>Theory:</h3>
+        <p>The Adapter pattern allows incompatible interfaces to work together. It acts as a bridge between two
+            incompatible interfaces by wrapping an existing class with a new interface. This pattern is useful when you
+            want to use an existing class with an incompatible interface.</p>
+
+        <h3>UML Diagram:</h3>
+        <div class="uml-diagram">
+            Client ────────► Target<br>
+            ↑<br>
+            │<br>
+            Adapter ────────► Adaptee<br>
+            │ │<br>
+            └─── delegates ────┘
+        </div>
+
+        <h3>Structure:</h3>
+        <div class="structure-list">
+            <ul>
+                <li><strong>Target:</strong> The interface that clients expect</li>
+                <li><strong>Adapter:</strong> Adapts the Adaptee interface to the Target interface</li>
+                <li><strong>Adaptee:</strong> The existing interface that needs adapting</li>
+                <li><strong>Client:</strong> Uses the Target interface</li>
+            </ul>
+        </div>
+
+        <h3>Code Example:</h3>
+        <div class="code-block"><span class="comment">// Target interface</span>
+            <span class="keyword">interface</span> <span class="class-name">MediaPlayer</span> {
+            <span class="keyword">void</span> <span class="method">play</span>(<span class="class-name">String</span>
+            audioType, <span class="class-name">String</span> fileName);
+            }
+
+            <span class="comment">// Adaptee - existing incompatible interface</span>
+            <span class="keyword">class</span> <span class="class-name">AdvancedMediaPlayer</span> {
+            <span class="keyword">void</span> <span class="method">playVlc</span>(<span class="class-name">String</span>
+            fileName) {
+            <span class="comment">/* implementation */</span>
+            }
+            <span class="keyword">void</span> <span class="method">playMp4</span>(<span class="class-name">String</span>
+            fileName) {
+            <span class="comment">/* implementation */</span>
+            }
+            }
+
+            <span class="comment">// Adapter class</span>
+            <span class="keyword">class</span> <span class="class-name">MediaAdapter</span> <span
+                class="keyword">implements</span> <span class="class-name">MediaPlayer</span> {
+            <span class="class-name">AdvancedMediaPlayer</span> advancedPlayer;
+
+            <span class="keyword">public</span> <span class="method">MediaAdapter</span>(<span
+                class="class-name">String</span> audioType) {
+            <span class="comment">// Initialize based on audio type</span>
+            advancedPlayer = <span class="keyword">new</span> <span class="class-name">AdvancedMediaPlayer</span>();
+            }
+
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="method">play</span>(<span
+                class="class-name">String</span> audioType, <span class="class-name">String</span> fileName) {
+            <span class="keyword">if</span>(audioType.<span class="method">equalsIgnoreCase</span>(<span
+                class="string">"vlc"</span>)) {
+            advancedPlayer.<span class="method">playVlc</span>(fileName);
+            }
+            <span class="comment">// ... other adaptations</span>
+            }
+            }
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
+<div class="pattern-section">
+    <h2>2.2 Composite Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Composite pattern allows you to compose objects into tree structures to represent part-whole hierarchies. It
+        lets clients treat individual objects and compositions of objects uniformly. This pattern is ideal for
+        representing hierarchical structures like file systems, organizational charts, or UI components.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Component<br>
+        ↑<br>
+        ┌───────┴───────┐<br>
+        │ │<br>
+        Leaf Composite<br>
+        │<br>
+        └─── contains ───► Component
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Component:</strong> Abstract base class defining common interface</li>
+            <li><strong>Leaf:</strong> Represents leaf objects with no children</li>
+            <li><strong>Composite:</strong> Defines behavior for components having children</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Component interface
+        abstract class FileSystemComponent {
+        protected String name;
+
+        public abstract void display(int depth);
+        public abstract int getSize();
+
+        // Default implementations for composite operations
+        public void add(FileSystemComponent component) {
+        throw new UnsupportedOperationException();
+        }
+
+        public void remove(FileSystemComponent component) {
+        throw new UnsupportedOperationException();
+        }
+        }
+
+        // Leaf
+        class File extends FileSystemComponent {
+        private int size;
+
+        public File(String name, int size) {
+        this.name = name;
+        this.size = size;
+        }
+
+        @Override
+        public void display(int depth) {
+        System.out.println("-".repeat(depth) + name);
+        }
+
+        @Override
+        public int getSize() { return size; }
+        }
+
+        // Composite
+        class Directory extends FileSystemComponent {
+        private List&lt;FileSystemComponent&gt; children = new ArrayList&lt;&gt;();
+
+        public Directory(String name) {
+        this.name = name;
+        }
+
+        @Override
+        public void add(FileSystemComponent component) {
+        children.add(component);
+        }
+
+        @Override
+        public void display(int depth) {
+        System.out.println("-".repeat(depth) + name + "/");
+        for(FileSystemComponent component : children) {
+        component.display(depth + 2);
+        }
+        }
+
+        @Override
+        public int getSize() {
+        return children.stream().mapToInt(FileSystemComponent::getSize).sum();
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>2.3 Proxy Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Proxy pattern provides a surrogate or placeholder for another object to control access to it. It creates a
+        representative object that controls access to the original object, allowing you to perform additional operations
+        before or after the request reaches the original object.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Client ────────► Subject<br>
+        ↑<br>
+        ┌────┴────┐<br>
+        │ │<br>
+        RealSubject Proxy ──────► RealSubject
+    </div>
+
+    <h3>Types:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Virtual Proxy:</strong> Controls access to expensive resources</li>
+            <li><strong>Protection Proxy:</strong> Controls access based on permissions</li>
+            <li><strong>Remote Proxy:</strong> Provides local representative for remote objects</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Subject interface
+        interface Image {
+        void display();
+        }
+
+        // RealSubject
+        class RealImage implements Image {
+        private String filename;
+
+        public RealImage(String filename) {
+        this.filename = filename;
+        loadFromDisk();
+        }
+
+        private void loadFromDisk() {
+        System.out.println("Loading " + filename);
+        // Expensive operation
+        }
+
+        @Override
+        public void display() {
+        System.out.println("Displaying " + filename);
+        }
+        }
+
+        // Proxy
+        class ProxyImage implements Image {
+        private RealImage realImage;
+        private String filename;
+
+        public ProxyImage(String filename) {
+        this.filename = filename;
+        }
+
+        @Override
+        public void display() {
+        if(realImage == null) {
+        realImage = new RealImage(filename); // Lazy loading
+        }
+        realImage.display();
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>2.4 Flyweight Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Flyweight pattern minimizes memory usage by sharing efficiently common data among multiple objects. It
+        separates intrinsic state (shared) from extrinsic state (context-dependent), storing intrinsic state in
+        flyweight objects and passing extrinsic state as parameters.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Client ──────► Context<br>
+        │ │<br>
+        │ ▼<br>
+        └──────► Flyweight ◄──── FlyweightFactory<br>
+        ↑ │<br>
+        │ │<br>
+        ConcreteFlyweight ◄───────┘
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Flyweight:</strong> Interface for flyweights to receive extrinsic state</li>
+            <li><strong>ConcreteFlyweight:</strong> Implements flyweight interface and stores intrinsic state</li>
+            <li><strong>FlyweightFactory:</strong> Creates and manages flyweight objects</li>
+            <li><strong>Context:</strong> Contains extrinsic state</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Flyweight interface
+        interface Shape {
+        void draw(int x, int y, int radius); // extrinsic state as parameters
+        }
+
+        // Concrete Flyweight
+        class Circle implements Shape {
+        private String color; // intrinsic state
+
+        public Circle(String color) {
+        this.color = color;
+        }
+
+        @Override
+        public void draw(int x, int y, int radius) {
+        System.out.println("Drawing " + color + " circle at (" + x + "," + y + ") radius=" + radius);
+        }
+        }
+
+        // Flyweight Factory
+        class ShapeFactory {
+        private static final Map&lt;String, Shape&gt; circleMap = new HashMap&lt;&gt;();
+
+        public static Shape getCircle(String color) {
+        Circle circle = (Circle) circleMap.get(color);
+
+        if(circle == null) {
+        circle = new Circle(color);
+        circleMap.put(color, circle);
+        System.out.println("Creating circle of color: " + color);
+        }
+        return circle;
+        }
+
+        public static int getCreatedShapes() {
+        return circleMap.size();
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>2.5 Facade Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Facade pattern provides a simplified interface to a complex subsystem. It defines a higher-level interface
+        that makes the subsystem easier to use by hiding the complexities of the subsystem from clients. This pattern
+        promotes loose coupling between clients and subsystems.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Client ──────► Facade ──────► Subsystem Classes<br>
+        │ ├─ ClassA<br>
+        │ ├─ ClassB<br>
+        │ ├─ ClassC<br>
+        └──────────────└─ ClassD
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Facade:</strong> Provides simple methods that delegate to subsystem classes</li>
+            <li><strong>Subsystem Classes:</strong> Complex classes that perform the actual work</li>
+            <li><strong>Client:</strong> Uses the Facade instead of calling subsystem classes directly</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Subsystem classes
+        class DVDPlayer {
+        public void on() { System.out.println("DVD Player on"); }
+        public void play(String movie) { System.out.println("Playing: " + movie); }
+        public void off() { System.out.println("DVD Player off"); }
+        }
+
+        class Amplifier {
+        public void on() { System.out.println("Amplifier on"); }
+        public void setVolume(int level) { System.out.println("Volume set to " + level); }
+        public void off() { System.out.println("Amplifier off"); }
+        }
+
+        class Projector {
+        public void on() { System.out.println("Projector on"); }
+        public void wideScreenMode() { System.out.println("Projector wide screen"); }
+        public void off() { System.out.println("Projector off"); }
+        }
+
+        // Facade
+        class HomeTheaterFacade {
+        private DVDPlayer dvdPlayer;
+        private Amplifier amplifier;
+        private Projector projector;
+
+        public HomeTheaterFacade(DVDPlayer dvd, Amplifier amp, Projector proj) {
+        this.dvdPlayer = dvd;
+        this.amplifier = amp;
+        this.projector = proj;
+        }
+
+        public void watchMovie(String movie) {
+        System.out.println("Get ready to watch a movie...");
+        projector.on();
+        projector.wideScreenMode();
+        amplifier.on();
+        amplifier.setVolume(5);
+        dvdPlayer.on();
+        dvdPlayer.play(movie);
+        }
+
+        public void endMovie() {
+        System.out.println("Shutting movie theater down...");
+        // ... shutdown sequence
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>2.6 Bridge Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Bridge pattern separates an abstraction from its implementation, allowing both to vary independently. It uses
+        composition instead of inheritance to connect the abstraction and implementation hierarchies. This pattern is
+        useful when you want to avoid permanent binding between an abstraction and its implementation.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Abstraction ──────► Implementation<br>
+        ↑ ↑<br>
+        │ │<br>
+        RefinedAbstraction ConcreteImplementation
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Abstraction:</strong> Defines the abstraction's interface and maintains reference to implementor
+            </li>
+            <li><strong>RefinedAbstraction:</strong> Extends the abstraction</li>
+            <li><strong>Implementation:</strong> Defines interface for implementation classes</li>
+            <li><strong>ConcreteImplementation:</strong> Implements the Implementation interface</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Implementation interface
+        interface DrawingAPI {
+        void drawCircle(double x, double y, double radius);
+        }
+
+        // Concrete Implementations
+        class DrawingAPI1 implements DrawingAPI {
+        @Override
+        public void drawCircle(double x, double y, double radius) {
+        System.out.printf("API1.circle at %f:%f radius %f%n", x, y, radius);
+        }
+        }
+
+        class DrawingAPI2 implements DrawingAPI {
+        @Override
+        public void drawCircle(double x, double y, double radius) {
+        System.out.printf("API2.circle at %f:%f radius %f%n", x, y, radius);
+        }
+        }
+
+        // Abstraction
+        abstract class Shape {
+        protected DrawingAPI drawingAPI;
+
+        protected Shape(DrawingAPI drawingAPI) {
+        this.drawingAPI = drawingAPI;
+        }
+
+        public abstract void draw();
+        public abstract void resizeByPercentage(double pct);
+        }
+
+        // Refined Abstraction
+        class CircleShape extends Shape {
+        private double x, y, radius;
+
+        public CircleShape(double x, double y, double radius, DrawingAPI drawingAPI) {
+        super(drawingAPI);
+        this.x = x; this.y = y; this.radius = radius;
+        }
+
+        @Override
+        public void draw() {
+        drawingAPI.drawCircle(x, y, radius);
+        }
+
+        @Override
+        public void resizeByPercentage(double pct) {
+        radius *= (1.0 + pct/100.0);
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>2.7 Decorator Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Decorator pattern allows behavior to be added to objects dynamically without altering their structure. It
+        provides a flexible alternative to subclassing for extending functionality by wrapping objects in decorator
+        classes that contain the additional behavior.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Component<br>
+        ↑<br>
+        ┌────┴────┐<br>
+        │ │<br>
+        ConcreteComponent Decorator ──────► Component<br>
+        │ ↑<br>
+        │ │<br>
+        └── ConcreteDecorator
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Component:</strong> Common interface for objects that can be decorated</li>
+            <li><strong>ConcreteComponent:</strong> Basic implementation of Component</li>
+            <li><strong>Decorator:</strong> Abstract decorator class that wraps a Component</li>
+            <li><strong>ConcreteDecorator:</strong> Adds specific functionality to the Component</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Component interface
+        interface Coffee {
+        String getDescription();
+        double getCost();
+        }
+
+        // Concrete Component
+        class SimpleCoffee implements Coffee {
+        @Override
+        public String getDescription() {
+        return "Simple Coffee";
+        }
+
+        @Override
+        public double getCost() {
+        return 2.0;
+        }
+        }
+
+        // Base Decorator
+        abstract class CoffeeDecorator implements Coffee {
+        protected Coffee coffee;
+
+        public CoffeeDecorator(Coffee coffee) {
+        this.coffee = coffee;
+        }
+
+        @Override
+        public String getDescription() {
+        return coffee.getDescription();
+        }
+
+        @Override
+        public double getCost() {
+        return coffee.getCost();
+        }
+        }
+
+        // Concrete Decorators
+        class MilkDecorator extends CoffeeDecorator {
+        public MilkDecorator(Coffee coffee) {
+        super(coffee);
+        }
+
+        @Override
+        public String getDescription() {
+        return coffee.getDescription() + ", Milk";
+        }
+
+        @Override
+        public double getCost() {
+        return coffee.getCost() + 0.5;
+        }
+        }
+
+        class SugarDecorator extends CoffeeDecorator {
+        public SugarDecorator(Coffee coffee) {
+        super(coffee);
+        }
+
+        @Override
+        public String getDescription() {
+        return coffee.getDescription() + ", Sugar";
+        }
+
+        @Override
+        public double getCost() {
+        return coffee.getCost() + 0.2;
+        }
+        }
+    </div>
+</div>
+
+<h1>3. Behavioral Design Patterns</h1>
+
+<div class="pattern-section">
+    <h2>3.1 Template Method Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Template Method pattern defines the skeleton of an algorithm in a base class, letting subclasses override
+        specific steps without changing the algorithm's structure. It promotes code reuse and ensures that the overall
+        algorithm structure remains consistent across different implementations.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        AbstractClass<br>
+        ┌─ templateMethod()<br>
+        ├─ primitiveOperation1() [abstract]<br>
+        └─ primitiveOperation2() [abstract]<br>
+        ↑<br>
+        │<br>
+        ConcreteClass<br>
+        ├─ primitiveOperation1() [implemented]<br>
+        └─ primitiveOperation2() [implemented]
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>AbstractClass:</strong> Defines template method and abstract primitive operations</li>
+            <li><strong>ConcreteClass:</strong> Implements primitive operations for specific algorithm steps</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Abstract class defining template method
+        abstract class DataProcessor {
+
+        // Template method - defines algorithm skeleton
+        public final void processData() {
+        readData();
+        processDataImpl();
+        writeData();
+        }
+
+        // Concrete methods
+        private void readData() {
+        System.out.println("Reading data from source");
+        }
+
+        private void writeData() {
+        System.out.println("Writing processed data");
+        }
+
+        // Abstract method to be implemented by subclasses
+        protected abstract void processDataImpl();
+        }
+
+        // Concrete implementations
+        class CSVDataProcessor extends DataProcessor {
+        @Override
+        protected void processDataImpl() {
+        System.out.println("Processing CSV data");
+        // CSV-specific processing logic
+        }
+        }
+
+        class XMLDataProcessor extends DataProcessor {
+        @Override
+        protected void processDataImpl() {
+        System.out.println("Processing XML data");
+        // XML-specific processing logic
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.2 Mediator Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Mediator pattern defines how a set of objects interact with each other. Instead of objects communicating
+        directly, they communicate through a central mediator object. This pattern promotes loose coupling by keeping
+        objects from referring to each other explicitly.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Mediator ◄──────── ConcreteMediator ──────► Colleague<br>
+        ↑ │ ↑<br>
+        │ │ ┌────┴────┐<br>
+        │ │ │ │<br>
+        └──────────────────────┘ ConcreteColleague1 ConcreteColleague2
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Mediator:</strong> Interface defining communication contract</li>
+            <li><strong>ConcreteMediator:</strong> Implements mediator and coordinates communication</li>
+            <li><strong>Colleague:</strong> Abstract base for objects that communicate through mediator</li>
+            <li><strong>ConcreteColleague:</strong> Specific objects that interact via mediator</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Mediator interface
+        interface ChatMediator {
+        void sendMessage(String message, User user);
+        void addUser(User user);
+        }
+
+        // Concrete Mediator
+        class ConcreteChatMediator implements ChatMediator {
+        private List&lt;User&gt; users = new ArrayList&lt;&gt;();
+
+        @Override
+        public void addUser(User user) {
+        users.add(user);
+        }
+
+        @Override
+        public void sendMessage(String message, User sender) {
+        for(User user : users) {
+        if(user != sender) {
+        user.receive(message, sender.getName());
+        }
+        }
+        }
+        }
+
+        // Colleague
+        abstract class User {
+        protected ChatMediator mediator;
+        protected String name;
+
+        public User(ChatMediator mediator, String name) {
+        this.mediator = mediator;
+        this.name = name;
+        }
+
+        public abstract void send(String message);
+        public abstract void receive(String message, String from);
+
+        public String getName() { return name; }
+        }
+
+        // Concrete Colleague
+        class ConcreteUser extends User {
+        public ConcreteUser(ChatMediator mediator, String name) {
+        super(mediator, name);
+        }
+
+        @Override
+        public void send(String message) {
+        System.out.println(name + " sending: " + message);
+        mediator.sendMessage(message, this);
+        }
+
+        @Override
+        public void receive(String message, String from) {
+        System.out.println(name + " received: " + message + " from " + from);
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.3 Chain of Responsibility Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Chain of Responsibility pattern passes requests along a chain of handlers. Each handler decides either to
+        process the request or pass it to the next handler in the chain. This pattern decouples senders and receivers of
+        requests and allows multiple objects to handle the request without the sender knowing which object will handle
+        it.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Client ──────► Handler ◄─────┐<br>
+        ↑ │<br>
+        │ │<br>
+        ConcreteHandler ──┘<br>
+        │<br>
+        nextHandler
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Handler:</strong> Abstract base class defining interface and chain link</li>
+            <li><strong>ConcreteHandler:</strong> Handles requests it's responsible for, passes others to successor</li>
+            <li><strong>Client:</strong> Initiates request to chain</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Handler abstract class
+        abstract class SupportHandler {
+        protected SupportHandler nextHandler;
+
+        public void setNextHandler(SupportHandler nextHandler) {
+        this.nextHandler = nextHandler;
+        }
+
+        public abstract void handleRequest(SupportRequest request);
+        }
+
+        // Support request class
+        class SupportRequest {
+        private RequestType type;
+        private String description;
+
+        public SupportRequest(RequestType type, String description) {
+        this.type = type;
+        this.description = description;
+        }
+
+        // getters...
+        public RequestType getType() { return type; }
+        public String getDescription() { return description; }
+        }
+
+        enum RequestType { BASIC, INTERMEDIATE, CRITICAL }
+
+        // Concrete Handlers
+        class Level1Support extends SupportHandler {
+        @Override
+        public void handleRequest(SupportRequest request) {
+        if(request.getType() == RequestType.BASIC) {
+        System.out.println("Level 1 Support handled: " + request.getDescription());
+        } else if(nextHandler != null) {
+        nextHandler.handleRequest(request);
+        }
+        }
+        }
+
+        class Level2Support extends SupportHandler {
+        @Override
+        public void handleRequest(SupportRequest request) {
+        if(request.getType() == RequestType.INTERMEDIATE) {
+        System.out.println("Level 2 Support handled: " + request.getDescription());
+        } else if(nextHandler != null) {
+        nextHandler.handleRequest(request);
+        }
+        }
+        }
+
+        class Level3Support extends SupportHandler {
+        @Override
+        public void handleRequest(SupportRequest request) {
+        if(request.getType() == RequestType.CRITICAL) {
+        System.out.println("Level 3 Support handled: " + request.getDescription());
+        } else {
+        System.out.println("Request cannot be handled");
+        }
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.4 Observer Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Observer pattern defines a one-to-many dependency between objects so that when one object changes state, all
+        its dependents are notified automatically. This pattern is fundamental to implementing distributed event
+        handling systems and the Model-View architecture.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Subject ◄──────── ConcreteSubject<br>
+        ↑ │<br>
+        │ │ notify()<br>
+        Observer ◄───────── ConcreteObserver<br>
+        ↑<br>
+        │<br>
+        update()
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Subject:</strong> Maintains list of observers and provides methods to add/remove observers</li>
+            <li><strong>Observer:</strong> Interface for objects that should be notified of changes</li>
+            <li><strong>ConcreteSubject:</strong> Stores state and notifies observers when state changes</li>
+            <li><strong>ConcreteObserver:</strong> Implements Observer interface to receive notifications</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Observer interface
+        interface Observer {
+        void update(String news);
+        }
+
+        // Subject interface
+        interface Subject {
+        void addObserver(Observer observer);
+        void removeObserver(Observer observer);
+        void notifyObservers();
+        }
+
+        // Concrete Subject
+        class NewsAgency implements Subject {
+        private List&lt;Observer&gt; observers = new ArrayList&lt;&gt;();
+        private String news;
+
+        @Override
+        public void addObserver(Observer observer) {
+        observers.add(observer);
+        }
+
+        @Override
+        public void removeObserver(Observer observer) {
+        observers.remove(observer);
+        }
+
+        @Override
+        public void notifyObservers() {
+        for(Observer observer : observers) {
+        observer.update(news);
+        }
+        }
+
+        public void setNews(String news) {
+        this.news = news;
+        notifyObservers();
+        }
+        }
+
+        // Concrete Observer
+        class NewsChannel implements Observer {
+        private String channelName;
+        private String latestNews;
+
+        public NewsChannel(String channelName) {
+        this.channelName = channelName;
+        }
+
+        @Override
+        public void update(String news) {
+        this.latestNews = news;
+        System.out.println(channelName + " received news: " + news);
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.5 Strategy Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It
+        lets the algorithm vary independently from clients that use it. This pattern is useful when you have multiple
+        ways to perform a task and want to choose the algorithm at runtime.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Context ──────► Strategy<br>
+        ↑<br>
+        ┌────┴────┐<br>
+        │ │<br>
+        ConcreteStrategyA ConcreteStrategyB
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Context:</strong> Maintains reference to Strategy object and delegates algorithm execution</li>
+            <li><strong>Strategy:</strong> Common interface for all concrete strategies</li>
+            <li><strong>ConcreteStrategy:</strong> Implements specific algorithm using Strategy interface</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Strategy interface
+        interface PaymentStrategy {
+        void pay(double amount);
+        }
+
+        // Concrete Strategies
+        class CreditCardPayment implements PaymentStrategy {
+        private String cardNumber;
+        private String name;
+
+        public CreditCardPayment(String cardNumber, String name) {
+        this.cardNumber = cardNumber;
+        this.name = name;
+        }
+
+        @Override
+        public void pay(double amount) {
+        System.out.println("Paid $" + amount + " using Credit Card ending in " +
+        cardNumber.substring(cardNumber.length()-4));
+        }
+        }
+
+        class PayPalPayment implements PaymentStrategy {
+        private String email;
+
+        public PayPalPayment(String email) {
+        this.email = email;
+        }
+
+        @Override
+        public void pay(double amount) {
+        System.out.println("Paid $" + amount + " using PayPal account: " + email);
+        }
+        }
+
+        // Context
+        class ShoppingCart {
+        private List&lt;Item&gt; items = new ArrayList&lt;&gt;();
+        private PaymentStrategy paymentStrategy;
+
+        public void addItem(Item item) {
+        items.add(item);
+        }
+
+        public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+        }
+
+        public void checkout() {
+        double total = items.stream().mapToDouble(Item::getPrice).sum();
+        paymentStrategy.pay(total);
+        }
+        }
+
+        class Item {
+        private String name;
+        private double price;
+
+        // constructor and getters...
+        public double getPrice() { return price; }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.6 Command Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The Command pattern encapsulates a request as an object, allowing you to parameterize clients with different
+        requests, queue operations, and support undo operations. It decouples the object that invokes the operation from
+        the object that performs it.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Client ──────► Command ◄───── ConcreteCommand ──────► Receiver<br>
+        ↑ │<br>
+        │ action()<br>
+        Invoker
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Command:</strong> Interface for executing operations</li>
+            <li><strong>ConcreteCommand:</strong> Implements Command and defines binding between Receiver and action
+            </li>
+            <li><strong>Receiver:</strong> Knows how to perform operations associated with request</li>
+            <li><strong>Invoker:</strong> Asks command to carry out the request</li>
+            <li><strong>Client:</strong> Creates ConcreteCommand and sets its receiver</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // Command interface
+        interface Command {
+        void execute();
+        void undo();
+        }
+
+        // Receiver
+        class Light {
+        private boolean isOn = false;
+
+        public void turnOn() {
+        isOn = true;
+        System.out.println("Light is ON");
+        }
+
+        public void turnOff() {
+        isOn = false;
+        System.out.println("Light is OFF");
+        }
+        }
+
+        // Concrete Commands
+        class LightOnCommand implements Command {
+        private Light light;
+
+        public LightOnCommand(Light light) {
+        this.light = light;
+        }
+
+        @Override
+        public void execute() {
+        light.turnOn();
+        }
+
+        @Override
+        public void undo() {
+        light.turnOff();
+        }
+        }
+
+        class LightOffCommand implements Command {
+        private Light light;
+
+        public LightOffCommand(Light light) {
+        this.light = light;
+        }
+
+        @Override
+        public void execute() {
+        light.turnOff();
+        }
+
+        @Override
+        public void undo() {
+        light.turnOn();
+        }
+        }
+
+        // Invoker
+        class RemoteControl {
+        private Command[] onCommands;
+        private Command[] offCommands;
+        private Command undoCommand;
+
+        public RemoteControl() {
+        onCommands = new Command[7];
+        offCommands = new Command[7];
+        // Initialize with NoCommand objects...
+        }
+
+        public void setCommand(int slot, Command onCommand, Command offCommand) {
+        onCommands[slot] = onCommand;
+        offCommands[slot] = offCommand;
+        }
+
+        public void onButtonPressed(int slot) {
+        onCommands[slot].execute();
+        undoCommand = onCommands[slot];
+        }
+
+        public void undoButtonPressed() {
+        undoCommand.undo();
+        }
+        }
+    </div>
+</div>
+
+<div class="pattern-section">
+    <h2>3.7 State Pattern</h2>
+
+    <h3>Theory:</h3>
+    <p>The State pattern allows an object to alter its behavior when its internal state changes. The object appears to
+        change its class. This pattern is useful for implementing state machines and eliminates the need for large
+        conditional statements.</p>
+
+    <h3>UML Diagram:</h3>
+    <div class="uml-diagram">
+        Context ──────► State<br>
+        │ ↑<br>
+        │ ┌────┴────┐<br>
+        state │ │<br>
+        ConcreteStateA ConcreteStateB
+    </div>
+
+    <h3>Structure:</h3>
+    <div class="structure-list">
+        <ul>
+            <li><strong>Context:</strong> Maintains instance of ConcreteState and delegates state-specific behavior</li>
+            <li><strong>State:</strong> Interface for encapsulating behavior associated with state</li>
+            <li><strong>ConcreteState:</strong> Implements behavior associated with specific state</li>
+        </ul>
+    </div>
+
+    <h3>Code Example:</h3>
+    <div class="code-block">
+        // State interface
+        interface State {
+        void insertQuarter(GumballMachine machine);
+        void ejectQuarter(GumballMachine machine);
+        void turnCrank(GumballMachine machine);
+        void dispense(GumballMachine machine);
+        }
+
+        // Context
+        class GumballMachine {
+        private State soldOutState;
+        private State noQuarterState;
+        private State hasQuarterState;
+        private State soldState;
+
+        private State currentState;
+        private int count = 0;
+
+        public GumballMachine(int numberGumballs) {
+        soldOutState = new SoldOutState();
+        noQuarterState = new NoQuarterState();
+        hasQuarterState = new HasQuarterState();
+        soldState = new SoldState();
+
+        this.count = numberGumballs;
+        if (numberGumballs > 0) {
+        currentState = noQuarterState;
+        } else {
+        currentState = soldOutState;
+        }
+        }
+
+        public void insertQuarter() { currentState.insertQuarter(this); }
+        public void ejectQuarter() { currentState.ejectQuarter(this); }
+        public void turnCrank() {
+        currentState.turnCrank(this);
+        currentState.dispense(this);
+        }
+
+        public void setState(State state) { this.currentState = state; }
+        public void releaseBall() {
+        System.out.println("A gumball comes rolling out the slot...");
+        if (count != 0) count--;
+        }
+
+        // Getters for states...
+        public State getSoldOutState() { return soldOutState; }
+        public State getNoQuarterState() { return noQuarterState; }
+        public State getHasQuarterState() { return hasQuarterState; }
+        public State getSoldState() { return soldState; }
+        public int getCount() { return count; }
+        }
+
+        // Concrete States
+        class NoQuarterState implements State {
+        @Override
+        public void insertQuarter(GumballMachine machine) {
+        System.out.println("You inserted a quarter");
+        machine.setState(machine.getHasQuarterState());
+        }
+
+        @Override
+        public void ejectQuarter(GumballMachine machine) {
+        System.out.println("You haven't inserted a quarter");
+        }
+
+        @Override
+        public void turnCrank(GumballMachine machine) {
+        System.out.println("You turned, but there's no quarter");
+        }
+
+        @Override
+        public void dispense(GumballMachine machine) {
+        System.out.println("You need to pay first");
+        }
+        }
+
+        class HasQuarterState implements State {
+        @Override
+        public void insertQuarter(GumballMachine machine) {
+        System.out.println("You can't insert another quarter");
+        }
+
+        @Override
+        public void ejectQuarter(GumballMachine machine) {
+        System.out.println("Quarter returned");
+        machine.setState(machine.getNoQuarterState());
+        }
+
+        @Override
+        public void turnCrank(GumballMachine machine) {
+        System.out.println("You turned...");
+        machine.setState(machine.getSoldState());
+        }
+
+        @Override
+        public void dispense(GumballMachine machine) {
+        System.out.println("No gumball dispensed");
+        }
+        }
+    </div>
+
+
+    <div class="pattern-section">
+        <h2>3.8 Visitor Pattern</h2>
+
+        <h3>Theory:</h3>
+        <p>The Visitor pattern lets you define new operations without changing the classes of the elements on which it
+            operates. It separates algorithms from the objects on which they operate by moving the operational logic
+            into separate visitor classes.</p>
+
+        <h3>UML Diagram:</h3>
+        <div class="uml-diagram">
+            Client ──────► Visitor ◄───── ConcreteVisitor<br>
+            ↑ │<br>
+            │ visit()<br>
+            Element ──────► AcceptVisitor │<br>
+            ↑ │ │<br>
+            │ accept() ◄──────┘<br>
+            ConcreteElement
+        </div>
+
+        <h3>Structure:</h3>
+        <div class="structure-list">
+            <ul>
+                <li><strong>Visitor:</strong> Interface declaring visit operations for each ConcreteElement</li>
+                <li><strong>ConcreteVisitor:</strong> Implements operations defined by Visitor</li>
+                <li><strong>Element:</strong> Interface defining accept method</li>
+                <li><strong>ConcreteElement:</strong> Implements accept method and defines entry point</li>
+            </ul>
+        </div>
+
+        <h3>Code Example:</h3>
+        <div class="code-block">
+            // Visitor interface
+            interface ShapeVisitor {
+            void visit(Circle circle);
+            void visit(Rectangle rectangle);
+            void visit(Triangle triangle);
+            }
+
+            // Element interface
+            interface Shape {
+            void accept(ShapeVisitor visitor);
+            }
+
+            // Concrete Elements
+            class Circle implements Shape {
+            private double radius;
+
+            public Circle(double radius) {
+            this.radius = radius;
+            }
+
+            public double getRadius() { return radius; }
+
+            @Override
+            public void accept(ShapeVisitor visitor) {
+            visitor.visit(this);
+            }
+            }
+
+            class Rectangle implements Shape {
+            private double width, height;
+
+            public Rectangle(double width, double height) {
+            this.width = width;
+            this.height = height;
+            }
+
+            public double getWidth() { return width; }
+            public double getHeight() { return height; }
+
+            @Override
+            public void accept(ShapeVisitor visitor) {
+            visitor.visit(this);
+            }
+            }
+
+            // Concrete Visitors
+            class AreaCalculator implements ShapeVisitor {
+            private double totalArea = 0;
+
+            @Override
+            public void visit(Circle circle) {
+            double area = Math.PI * circle.getRadius() * circle.getRadius();
+            System.out.println("Circle area: " + area);
+            totalArea += area;
+            }
+
+            @Override
+            public void visit(Rectangle rectangle) {
+            double area = rectangle.getWidth() * rectangle.getHeight();
+            System.out.println("Rectangle area: " + area);
+            totalArea += area;
+            }
+
+            @Override
+            public void visit(Triangle triangle) {
+            // Implementation for triangle area calculation
+            }
+
+            public double getTotalArea() { return totalArea; }
+            }
+
+            class PerimeterCalculator implements ShapeVisitor {
+            @Override
+            public void visit(Circle circle) {
+            double perimeter = 2 * Math.PI * circle.getRadius();
+            System.out.println("Circle perimeter: " + perimeter);
+            }
+
+            @Override
+            public void visit(Rectangle rectangle) {
+            double perimeter = 2 * (rectangle.getWidth() + rectangle.getHeight());
+            System.out.println("Rectangle perimeter: " + perimeter);
+            }
+
+            @Override
+            public void visit(Triangle triangle) {
+            // Implementation for triangle perimeter calculation
+            }
+            }
+        </div>
+    </div>
+
+    <div class="pattern-section">
+        <h2>3.9 Iterator Pattern</h2>
+
+        <h3>Theory:</h3>
+        <p>The Iterator pattern provides a way to access elements of a collection sequentially without exposing its
+            underlying representation. It decouples algorithms from containers and provides a uniform interface for
+            traversing different collection types.</p>
+
+        <h3>UML Diagram:</h3>
+        <div class="uml-diagram">
+            Client ──────► Iterator ◄───── ConcreteIterator<br>
+            ↑ │<br>
+            hasNext() │<br>
+            next() │<br>
+            │<br>
+            Aggregate ──────► ConcreteAggregate ─┘<br>
+            ↑ │<br>
+            createIterator() createIterator()
+        </div>
+
+        <h3>Structure:</h3>
+        <div class="structure-list">
+            <ul>
+                <li><strong>Iterator:</strong> Interface for accessing and traversing elements</li>
+                <li><strong>ConcreteIterator:</strong> Implements Iterator interface and tracks current position</li>
+                <li><strong>Aggregate:</strong> Interface for creating Iterator objects</li>
+                <li><strong>ConcreteAggregate:</strong> Implements Aggregate interface</li>
+            </ul>
+        </div>
+
+        <h3>Code Example:</h3>
+        <div class="code-block">
+            // Iterator interface
+            interface Iterator&lt;T&gt; {
+            boolean hasNext();
+            T next();
+            }
+
+            // Aggregate interface
+            interface Container&lt;T&gt; {
+            Iterator&lt;T&gt; getIterator();
+            }
+
+            // Concrete Iterator
+            class BookIterator implements Iterator&lt;Book&gt; {
+            private Book[] books;
+            private int position = 0;
+
+            public BookIterator(Book[] books) {
+            this.books = books;
+            }
+
+            @Override
+            public boolean hasNext() {
+            return position &lt; books.length && books[position] != null;
+            }
+
+            @Override
+            public Book next() {
+            if(hasNext()) {
+            return books[position++];
+            }
+            return null;
+            }
+            }
+
+            // Concrete Aggregate
+            class BookCollection implements Container&lt;Book&gt; {
+            private Book[] books;
+            private int count = 0;
+
+            public BookCollection(int maxSize) {
+            books = new Book[maxSize];
+            }
+
+            public void addBook(Book book) {
+            if(count &lt; books.length) {
+            books[count++] = book;
+            }
+            }
+
+            @Override
+            public Iterator&lt;Book&gt; getIterator() {
+            return new BookIterator(books);
+            }
+            }
+
+            class Book {
+            private String title;
+            private String author;
+
+            public Book(String title, String author) {
+            this.title = title;
+            this.author = author;
+            }
+
+            // getters...
+            public String getTitle() { return title; }
+            public String getAuthor() { return author; }
+            }
+        </div>
+    </div>
+
+    <div class="pattern-section">
+        <h2>3.10 Interpreter Pattern</h2>
+
+        <h3>Theory:</h3>
+        <p>The Interpreter pattern defines a representation for a language's grammar and provides an interpreter to deal
+            with this grammar. It's used to evaluate sentences in a language by representing grammar rules as classes
+            and building an abstract syntax tree.</p>
+
+        <h3>UML Diagram:</h3>
+        <div class="uml-diagram">
+            Client ──────► Context<br>
+            │ │<br>
+            │ ▼<br>
+            └──────► AbstractExpression<br>
+            ↑<br>
+            ┌────┴────┐<br>
+            │ │<br>
+            TerminalExpression NonterminalExpression<br>
+            │<br>
+            expressions[]
+        </div>
+
+        <h3>Structure:</h3>
+        <div class="structure-list">
+            <ul>
+                <li><strong>AbstractExpression:</strong> Interface for executing operations</li>
+                <li><strong>TerminalExpression:</strong> Implements operations for terminal symbols</li>
+                <li><strong>NonterminalExpression:</strong> Implements operations for nonterminal symbols</li>
+                <li><strong>Context:</strong> Contains information global to interpreter</li>
+            </ul>
+        </div>
+
+        <h3>Code Example:</h3>
+        <div class="code-block">
+            // Abstract Expression
+            interface Expression {
+            boolean interpret(Context context);
+            }
+
+            // Context
+            class Context {
+            private Map&lt;String, Boolean&gt; variables = new HashMap&lt;&gt;();
+
+            public void setVariable(String name, boolean value) {
+            variables.put(name, value);
+            }
+
+            public boolean getVariable(String name) {
+            return variables.getOrDefault(name, false);
+            }
+            }
+
+            // Terminal Expression
+            class VariableExpression implements Expression {
+            private String variableName;
+
+            public VariableExpression(String variableName) {
+            this.variableName = variableName;
+            }
+
+            @Override
+            public boolean interpret(Context context) {
+            return context.getVariable(variableName);
+            }
+            }
+
+            // Nonterminal Expressions
+            class AndExpression implements Expression {
+            private Expression leftExpression;
+            private Expression rightExpression;
+
+            public AndExpression(Expression left, Expression right) {
+            this.leftExpression = left;
+            this.rightExpression = right;
+            }
+
+            @Override
+            public boolean interpret(Context context) {
+            return leftExpression.interpret(context) && rightExpression.interpret(context);
+            }
+            }
+
+            class OrExpression implements Expression {
+            private Expression leftExpression;
+            private Expression rightExpression;
+
+            public OrExpression(Expression left, Expression right) {
+            this.leftExpression = left;
+            this.rightExpression = right;
+            }
+
+            @Override
+            public boolean interpret(Context context) {
+            return leftExpression.interpret(context) || rightExpression.interpret(context);
+            }
+            }
+
+            class NotExpression implements Expression {
+            private Expression expression;
+
+            public NotExpression(Expression expression) {
+            this.expression = expression;
+            }
+
+            @Override
+            public boolean interpret(Context context) {
+            return !expression.interpret(context);
+            }
+            }
+        </div>
+    </div>
+
+    <div class="pattern-section">
+        <h2>3.11 Memento Pattern</h2>
+
+        <h3>Theory:</h3>
+        <p>The Memento pattern provides the ability to restore an object to its previous state without revealing the
+            details of its implementation. It captures and externalizes an object's internal state so that the object
+            can be restored to this state later.</p>
+
+        <h3>UML Diagram:</h3>
+        <div class="uml-diagram">
+            Originator ──────► Memento<br>
+            │ ↑<br>
+            │ │<br>
+            createMemento() │<br>
+            restoreMemento() │<br>
+            │ │<br>
+            └─────────────────┘<br>
+            │<br>
+            ▼<br>
+            Caretaker
+        </div>
+
+        <h3>Structure:</h3>
+        <div class="structure-list">
+            <ul>
+                <li><strong>Originator:</strong> Creates memento and uses it to restore its state</li>
+                <li><strong>Memento:</strong> Stores internal state of Originator</li>
+                <li><strong>Caretaker:</strong> Responsible for memento's safekeeping, never operates on memento</li>
+            </ul>
+        </div>
+
+        <h3>Code Example:</h3>
+        <div class="code-block">
+            // Memento class
+            class TextMemento {
+            private final String content;
+            private final int cursorPosition;
+            private final long timestamp;
+
+            public TextMemento(String content, int cursorPosition) {
+            this.content = content;
+            this.cursorPosition = cursorPosition;
+            this.timestamp = System.currentTimeMillis();
+            }
+
+            public String getContent() { return content; }
+            public int getCursorPosition() { return cursorPosition; }
+            public long getTimestamp() { return timestamp; }
+            }
+
+            // Originator
+            class TextEditor {
+            private StringBuilder content;
+            private int cursorPosition;
+
+            public TextEditor() {
+            this.content = new StringBuilder();
+            this.cursorPosition = 0;
+            }
+
+            public void write(String text) {
+            content.append(text);
+            cursorPosition += text.length();
+            }
+
+            public void setCursor(int position) {
+            if(position >= 0 && position &lt;= content.length()) {
+            this.cursorPosition = position;
+            }
+            }
+
+            // Create Memento
+            public TextMemento save() {
+            return new TextMemento(content.toString(), cursorPosition);
+            }
+
+            // Restore from Memento
+            public void restore(TextMemento memento) {
+            this.content = new StringBuilder(memento.getContent());
+            this.cursorPosition = memento.getCursorPosition();
+            }
+
+            public String getContent() { return content.toString(); }
+            public int getCursorPosition() { return cursorPosition; }
+            }
+
+            // Caretaker
+            class EditorHistory {
+            private Stack&lt;TextMemento&gt; history = new Stack&lt;&gt;();
+            private TextEditor editor;
+
+            public EditorHistory(TextEditor editor) {
+            this.editor = editor;
+            }
+
+            public void backup() {
+            history.push(editor.save());
+            }
+
+            public void undo() {
+            if(!history.isEmpty()) {
+            TextMemento memento = history.pop();
+            editor.restore(memento);
+            }
+            }
+
+            public boolean canUndo() {
+            return !history.isEmpty();
+            }
+
+            public void showHistory() {
+            System.out.println("History has " + history.size() + " states");
+            for(int i = 0; i &lt; history.size(); i++) {
+            TextMemento memento = history.get(i);
+            System.out.println("State " + i + ": " + memento.getContent().substring(0,
+            Math.min(20, memento.getContent().length())) + "...");
+            }
+            }
+            }
+        </div>
+    </div>
+
+
+    <div class="references">
+        <h2>References</h2>
+        <p><strong>Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994).</strong> <em>Design Patterns: Elements of
+                Reusable Object-Oriented Software.</em> Addison-Wesley.</p>
+
+        <p><strong>Freeman, E., & Robson, E. (2020).</strong> <em>Head First Design Patterns.</em> O'Reilly Media.</p>
+
+        <p><strong>Shvets, A. (2019).</strong> <em>Dive Into Design Patterns.</em> Refactoring.Guru.</p>
+
+        <hr style="margin: 30px 0; border: 1px solid #bdc3c7;">
+
+        <p style="font-style: italic; text-align: center; color: #7f8c8d; font-size: 14px;">
+            <em>This report provides a comprehensive overview of 18 essential design patterns with theoretical
+                foundations, structural diagrams, and practical code examples. Each pattern includes partial
+                implementations that demonstrate core concepts while maintaining focus on understanding rather than
+                complete implementation details.</em>
+        </p>
+    </div>
+
+    <h1>4. Conclusion</h1>
+    <div class="conclusion-section">
+        <p>Design patterns are fundamental tools in software engineering that provide proven solutions to recurring
+            design problems. This comprehensive study of Structural and Behavioral patterns demonstrates their
+            importance in creating maintainable, flexible, and robust software systems.</p>
+
+        <h3>Key Benefits of Design Patterns:</h3>
+
+        <p><strong>Structural Patterns</strong> help organize code by defining relationships between entities. They
+            promote code reusability through composition and delegation rather than inheritance, making systems more
+            flexible and easier to maintain. The Adapter pattern enables integration of incompatible systems, Composite
+            simplifies hierarchical structures, Proxy provides controlled access, Flyweight optimizes memory usage,
+            Facade simplifies complex interfaces, Bridge separates abstraction from implementation, and Decorator adds
+            functionality dynamically.</p>
+
+        <p><strong>Behavioral Patterns</strong> focus on communication between objects and the assignment of
+            responsibilities. They help distribute behavior across objects in ways that increase flexibility in carrying
+            out communication. Template Method provides algorithmic frameworks, Mediator reduces coupling between
+            communicating objects, Chain of Responsibility decouples senders and receivers, Observer enables loose
+            coupling in event systems, Strategy makes algorithms interchangeable, Command encapsulates requests as
+            objects, State enables state-dependent behavior, Visitor separates algorithms from data structures, Iterator
+            provides uniform traversal, Interpreter enables language processing, and Memento enables state restoration.
+        </p>
+
+        <h3>Best Practices for Implementation:</h3>
+
+        <p><strong>1. Choose Appropriate Patterns:</strong> Not every problem requires a design pattern. Use patterns
+            when they solve actual problems, not just because they exist.</p>
+
+        <p><strong>2. Understand Trade-offs:</strong> Each pattern has benefits and costs. Consider complexity,
+            performance, and maintainability implications.</p>
+
+        <p><strong>3. Combine Patterns Wisely:</strong> Patterns often work together. For example, Abstract Factory with
+            Strategy, or Observer with Mediator.</p>
+
+        <p><strong>4. Avoid Over-engineering:</strong> Start simple and refactor toward patterns when the need becomes
+            clear.</p>
+
+        <p><strong>5. Document Pattern Usage:</strong> Make it clear when and why patterns are used in your codebase.
+        </p>
+
+        <p>Design patterns represent decades of collective experience in software development. They provide a shared
+            vocabulary that enables developers to communicate complex design concepts efficiently. By understanding and
+            applying these patterns appropriately, developers can create more robust, maintainable, and scalable
+            software systems.</p>
+
+        <p>The patterns covered in this report form the foundation of many modern software architectures and frameworks.
+            Mastering these patterns is essential for any software developer who wants to write high-quality,
+            professional code that stands the test of time.</p>
+    </div>
+
+    <div class="footer" style="display: flex; flex-direction: column; align-items: center; margin-top: 50px;">
+        <p class="footer-text" style="text-align: center; font-size: large;">End of the Report</p>
+        <a href="https://shakhawat-bijoy.vercel.app/" class="footer-link" target="_blank"
+            style="text-align: center; font-size: large; color: #000;"><span>Many thanks, </span><br><span class="student-name" style="font-weight: bold;">Shakhawat Hossain Bijoy</span></a>
+    </div>
+
+    <a href="#top" class="back-to-top" style="position: fixed; bottom: 20px; right: 20px; background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); z-index: 1000;">Back to Top</a>
+
+</div>
